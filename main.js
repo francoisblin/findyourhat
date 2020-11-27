@@ -5,6 +5,8 @@ const hole = 'O'
 const fieldCharacter = '░'
 const pathCharacter = '*'
 let foundHat = false
+let x = 0
+let y = 0 
 
 class Field {
   constructor(field) {
@@ -17,19 +19,17 @@ class Field {
 
   print () {
     console.log(this._field.join('\n').replace(/,/g, ""))
-    // this.input()
-    this.success()
+    this.input()
   }
 
   input () {
     let input = prompt('Find your hat, which way ? u, d, r, l: ')
+    let coordonates = this.position(input)
+    this.success(coordonates)
   }
 
   position (input) {
-    let x = 0
-    let y = 0
-    let playerPosition = [x][y]
-    if (input = 'r') {
+    if (input === 'r') {
       y += 1
     } else if (input === 'l') {
       y -= 1
@@ -40,32 +40,35 @@ class Field {
     } else {
       console.log('Please enter u, d, r or l')
     }
-    return playerPosition
+    return [x, y]
   }
 
-  success () {
+  success (coordonates) {
+    let a = coordonates[0]
+    let b = coordonates[1]
     while (!foundHat) {
-      for (let i = 0; i < this._field.length; i++) {
-        for (let j = 0; j < this._field[i].length; j++) {
-          if (this._field[i][j] === hole || this._field[i][j] === -1) {
-            console.log(`You lost`)
-            foundHat = true
-          } else if (this._field[i][j] === hat) {
-            console.log('You won')
-            foundHat = true
-          } else {
-            console.log('Continue')
-          }
-        }
+      if (a === -1 || b === -1 || this._field[a][b] === hole) {
+        console.log('You lost')
+        foundHat = true
+      } else if (this._field[a][b] === hat) {
+        console.log('You won!')
+        foundHat = true
+      } else {
+        this._field[a][b] = '*'
+        console.log('Continue')
+        console.log(this._field.join('\n').replace(/,/g, ""))
+        this.input()
       }
     }
   }
 }
+  
+
 
 const myField = new Field([
-  ['*', '░', 'O', '░', 'O'],
+  ['*', '░', 'O'],
   ['░', 'O', '░'],
-  ['░', '^', '░'],
+  ['░', '^', '░']
 ]);
 
 myField.print()
